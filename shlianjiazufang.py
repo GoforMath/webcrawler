@@ -18,22 +18,22 @@ s.headers.update(headers)
 f = open("shlianjiazufang.csv",'w')
 tmp = ['标题','URL','位置','面积','朝向','房型','楼层','可否看房','租金']
 f.write(','.join(tmp)+'\n')
+buffer=''
 
 for i in range(1,6): # only retrieve first 5 pages
     r = s.get(base_url % i)
     html_doc = r.text
     soup = BeautifulSoup(html_doc,features="html.parser")
     # content_list is the 17th div element appeared in the html document
-    div_soup=soup.find_all('div',limit=17)
-    content_list = div_soup[-1]
-    items = content_list.find_all("div","content__list--item")
+    items=soup.find_all('div',"content__list--item")
+    
     for i in items:
         # each i is a Tag
         main = i.div
         name = main.a.text.strip()
         partial_url = main.a["href"]
         # get description
-        des=main.find("p","content__list--item--des").text
+        des=main.find("p","content__list--item--des").text # 其他同学有用select的 main.select(".content__list--item--des")，不知道开销和find比如何
         #tmp = des.find_all("a")
         #location = '-'.join([x.string for x in tmp]) not a good way to extract info
         des_list=des.split('/')
@@ -50,7 +50,9 @@ for i in range(1,6): # only retrieve first 5 pages
 
         tmp = [name,partial_url,location,area,direction,roomtype,floor,service,price]
         entry = ','.join(tmp)
-        f.write(entry+'\n')
+        buffer = buffer+entry+'\n'
+        #f.write(entry+'\n') change to batch writing
+    f.write(buffer)
 
 f.close()
 
