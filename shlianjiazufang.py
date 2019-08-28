@@ -18,9 +18,10 @@ s.headers.update(headers)
 f = open("shlianjiazufang.csv",'w')
 tmp = ['标题','URL','位置','面积','朝向','房型','楼层','可否看房','租金']
 f.write(','.join(tmp)+'\n')
-buffer=''
+
 
 for i in range(1,6): # only retrieve first 5 pages
+    buffer=''
     r = s.get(base_url % i)
     html_doc = r.text
     soup = BeautifulSoup(html_doc,features="html.parser")
