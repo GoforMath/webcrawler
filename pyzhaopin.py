@@ -41,6 +41,8 @@ with open('pyzhaopinJD.csv', 'w') as f:
         strainer = bs4.SoupStrainer('div', 'describtion__detail-content')
         soup = bs4.BeautifulSoup(r.text, "lxml", parse_only=strainer)
         jd = soup.get_text(strip=True) # get job description
-        f.write(entry_list[i]+','+jd+'\n')
+        f.write(entry_list[i]+','+'"'+jd+'"'+'\n')# to avoid comma inside the JD
         print('collecting %d(th) JD ...' %i)
         time.sleep(2) # wait for 2s before next http request
+
+print('collection done')
